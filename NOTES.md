@@ -41,3 +41,29 @@ The concurrency in Erlang is performed by the process. But Erlang processes are 
 + Tibco EMS/Messaging/Rendezvous
 + alibaba Mmessage Queue
 
+
+### RabbitMA, Kafka, AWS Kinesis
+
+|           | RabbitMQ | Kafka | Aws Kinesis |
+| --------------- | --------------- | --------------- | --------------- |
+| Released1 | June, 2007 | Janary 2011 | Novermber 2013 |
+| General Purpose | Messages broker(queue) | Messages bus (stream processing - log) | Messages bus (stream process - log) |
+| Messages replay | no | yes | yes |
+| Cunsumer | Dummy consumer / Push model | Smart consumer(Pull mode) | Smart consumer(Pull & Push models) |
+| Data Throughput (relative to simple shard/node) | High - ( No quoted throughput) | Hightest (No qouted throughput) | High+(one shard can support 1 MB/s input, 2 MB/s output or 1000 records per seconds) |
+| Data consistency | Highest (ACKs) | High+ | High+ |
+| Persistence perio | No mimit | No limit | Up to 7 days |
+| Maintence effort | High+ | Highest | Very Low |
+| Cost | Relatively small | Relatively small | Highest |
+| OPen Source | Yes | Yes | No |
+
+ ### RabbitMQ vs Kafka - deep dive
+
+|        | RabbitMQ | Kafka |
+| --------------- | --------------- | --------------- |
+| Distribution | many consumers per queue, but message is consumed only once | Consumers distributed by topic partitions, message can be consumed by many consumers |
+| Availability | highly abailable | high available, but Zookeeper is needed to manage cluster state |
+| Replication | queues are not replicated by design | by desgin |
+| Protocols | standard Queue protocols like AMQP, STOMP, HTTP, and MQTT | binary serialized data |
+| Acknowdgments | sophisticated | basic |
+| Routing | very flexible (exchange, binding keys) | message is send to the topic by a key |
