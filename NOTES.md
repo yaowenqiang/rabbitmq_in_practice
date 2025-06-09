@@ -67,3 +67,28 @@ The concurrency in Erlang is performed by the process. But Erlang processes are 
 | Protocols | standard Queue protocols like AMQP, STOMP, HTTP, and MQTT | binary serialized data |
 | Acknowdgments | sophisticated | basic |
 | Routing | very flexible (exchange, binding keys) | message is send to the topic by a key |
+
+## RabbitMQ Deep Dive
+
+### AMQP Protocol
+
+AMQP is an open standard application layer protocol
+
++ Desigined for asyncchronous communication
++ AMQP standardizes the behavior of the messaging publisher and consumer
++ Platform independent
++ Technology independent (many SDKS)
+
+### AMQP Message
+
++ meader - Metadata, key/value paires, Defined by AMQP specification
++ properties - Properties: Metadata, Key/Value paires, Application-specific information holder
++ Body - Payload bytes[](max 2G )
+
+Message limit is 2GB, but it's better to avoid such a big messages if possible. Message is send epr frames, 131KB by default
+
+
+
+
+
+
