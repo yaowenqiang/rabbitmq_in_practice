@@ -87,6 +87,35 @@ AMQP is an open standard application layer protocol
 
 Message limit is 2GB, but it's better to avoid such a big messages if possible. Message is send epr frames, 131KB by default
 
+## Install 
+
+> 3.9.10
+
+> rabbitmq-server
+
+### Configuration
+
++ Environment variables - define ports, file locations and flags taken from the shell, or set in the environment Configuration file rabbitmq-env.conf/rabbitmq-env-conf.bat
++ Configuration file - defines server component settings for permissions, limits and clusters, and also plugin settings 
++ Runtime parameters and policies - defines cluster-wide settings which can change at runtime
+
+Most important configuration variables
+
++ RABBITMQ_NODE_PORT (efault 5672) - used by AMQP o-g-1 and 1.0 clients(without TLS)
++ RABBITMQ_DIST_PORT (efault 20000 + RABBITMQ_NODE_PORT) - used by Erlang distribution for inter-node and CLI tools communications
++ RABBITMQ_NODENAME (Unix default: rabbit@$HOSTNAME, Windows default: rabbit@%COMPUTERNAME%) - uniqe node name
++ RABBITMQ_MNESIA_BASE - RabbitMQ server's node database, message store and cluster state files one for each node
++ RABBITMQ_MNESIA_DIR - This is RABBITMQ_MNESIA_BASE subfolder, includes a schema database, message stores, cluster member information and other persistent node state
++ RABBITMQ_LOG_BASE - just logs
++ RABBITMQ_CONFIG_FILE - points rabbitmq config file ( note: the 'confg' extension is added)
++ RABBITMQ_ENABLED_PLUGINS_FILE - file to track enabled plugins
+
+
+
+
+
+
+
 
 
 
