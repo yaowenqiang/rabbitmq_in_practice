@@ -110,9 +110,21 @@ Most important configuration variables
 + RABBITMQ_CONFIG_FILE - points rabbitmq config file ( note: the 'confg' extension is added)
 + RABBITMQ_ENABLED_PLUGINS_FILE - file to track enabled plugins
 
+### Most important config file entries
+
++ cluster_name(default "") - used for automatic clustering
++ listeners.tcp.default - same as RABBITMQ_NODE_PORT
++ heartbeat(default 60 seconds) - after 60s connection should be xonsidered unreachable by RabbitMQ and client libraries. Server suggest this value to client libraries while establishing TCP connections at AMQP(AMQP protocol level) Larger value imporves throughput, smaller value improves latency (not related with max_message size which is 2GB)
++ channel_max (default 0 - unlimited) - number of channels to negotiate with clients. Using more channels increases broker's memory footprint
++ management.tcp.port (dfault 15672) - the web-management and RESTFUL service
+
+ 
+ > example config file
+
+ > https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbit/docs/rabbitmq.conf.example
 
 
-
+> docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
 
 
 
