@@ -127,8 +127,17 @@ Most important configuration variables
 > docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
 
 
+## Installation - plugins
 
+RabbitMQ supports plugins. Plugins extend core broker functionality in  many ways
 
++ more protocols
++ monitoring
++ additional AMQP 0-g exchange types
++ node fecerations
++ and many many more
+
+>default memory limit is total memory * 40%
 
 
 
