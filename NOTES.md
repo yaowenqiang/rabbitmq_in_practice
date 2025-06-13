@@ -140,5 +140,33 @@ RabbitMQ supports plugins. Plugins extend core broker functionality in  many way
 >default memory limit is total memory * 40%
 
 
+### Connection state
+
++ Running
++ Flow
++ Idle
++ Blocking/Blocked
+
+### connections
+
+TCP/IP connection between the client and the broker
+
+
+### Channel
+
+Virtual connection inside the physical TCP/IP connection (single TCP/IP connection with many channels vs many TCP/IP connections)
+
+### RabbitMQ web admin
+
+Web Admin is coming with RESTFUL service
+
+> curl localhost:15672/api/nodes
+
+
+> RabbitMQ Management HTTP API
+
+>http://localhost:15672/api/index.html
+
+
 
 
