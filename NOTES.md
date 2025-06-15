@@ -249,5 +249,28 @@ TT, Federation etc (web management REST API command line tool)
 + Exparation time (TTL) - Both messages (expiration property) and queues (x-message-ttl)can have TTL (policy settings), minimum value from both is ussed
 + Lazy Queues, Dead Letter Queues and many more
 
+### Queue concept - order
+
+Queues are FIFO manner - interms of producer (messages are always held in the queue in publication order), but not in terms of consumer
+
+Section 4.7 of AMQP 0-9-1 core specification explains the conditions under which consuming order is guaranteed (received in the same order that they were send)
+
++ messages published in one channel
++ passing through one exchange
++ stored in one queue
++ consumed by exactly one outgoing channel
+
+### ACK mode
+
++ Reject
++ Nack(negative ack - reject extension)
++ Ack
++ requeue
++ Dead Letter Exchange (DLX)
+
+### Encoding 
+
+how to handle binary payload
+
 
 
