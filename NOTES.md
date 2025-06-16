@@ -65,7 +65,7 @@ The concurrency in Erlang is performed by the process. But Erlang processes are 
 | Availability | highly abailable | high available, but Zookeeper is needed to manage cluster state |
 | Replication | queues are not replicated by design | by desgin |
 | Protocols | standard Queue protocols like AMQP, STOMP, HTTP, and MQTT | binary serialized data |
-| Acknowdgments | sophisticated | basic |
+| Acknowledgments | sophisticated | basic |
 | Routing | very flexible (exchange, binding keys) | message is send to the topic by a key |
 
 ## RabbitMQ Deep Dive
@@ -271,6 +271,36 @@ Section 4.7 of AMQP 0-9-1 core specification explains the conditions under which
 ### Encoding 
 
 how to handle binary payload
+
+
+### Queue - Persistency and Durability
+
+#### Durability
+
+AMQP property for queues and exchanges. Messages in durable entities can survive serverrestarts, by being automaticly recreated when server gets up
+
+#### Persistence
+
+Messages property. Stored on disk in special persistency log file. allowing them to be restored once server gets up. Persistence has no effect a non-durable queues.
+
+Persistent messages are removed from a durable queue once they are consumed (and Acknowlgdged)
+
+As default messages won't survive RabbitMQ restart or entire server restart. To ensure messages survive, make sure to:
+
++ Send message as persistent message
++ Publish into durable exchange
++ Message to be stored is durable queue
+
+### Work Queues 
+
++ Round-robin dispatching - Sends each message to the next consumer in a sequenceo
++ Message Acknowledgment - As default, message delivered into consumer is marked for deletiion
++ No message timeouts - RabbitMQ redeliver message when consumer dies
++ Prefetch - Rabbitmq dispatches a message when it enters the queue. here we want consumer to handle one message at time
+
+
+
+
 
 
 
