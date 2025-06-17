@@ -299,8 +299,37 @@ As default messages won't survive RabbitMQ restart or entire server restart. To 
 + Prefetch - Rabbitmq dispatches a message when it enters the queue. here we want consumer to handle one message at time
 
 
+### Publish / Subscribe (fanout)
 
 
++ Direct exchange routes to specific queue
++ Routing key is matched with binding key to route subset of messages to bound queues
++ Many categories of messages cause lot of bindings - it complicates administration of RabbitMQ
+
+### Publish / Subscribe based on Topics
+
+topic is a kinkd of routing key defined as list of words, delimited by dots
+Binding is a simple regular expression where *(star) can substitute exactly one word, #(hash) can substitute zero or more words
+
++ event.sport.footbal
++ event.sport.footbal.fcbarcelona
++ event.sport
++ event.wather.local-alerts
++ event.weather.london
+
+
+binding
+
+
++ *.sport.*
++ '.sport.#
++ *.weather.london.*
+
++ topic limit is 255 characters - List of words, delimited by dots
++ No words limit - A word can be any thing, should specify features hierarchy
++ Substitutions 
+  + *(star) exactly one word
+  + #(hash) zero or more words
 
 
 
