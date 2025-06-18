@@ -331,5 +331,18 @@ binding
   + *(star) exactly one word
   + #(hash) zero or more words
 
+### Publish / Subscribe based on Headers
+
+#### binding Arguments
+
+x-match = all
+category = sport
+source = bbc
+
+
+
+
+
+
 
 
