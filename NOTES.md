@@ -340,7 +340,33 @@ category = sport
 source = bbc
 
 
+### Summary
 
++ Uses headers from AMQP message structure - Key -> value paires
++ No substitutions - Header must exactly match to the list of headers defined in the binding
++ Ignores routing key - Like fanout exchange, headers exchange ignore routing key
++ More flexible than direct exchange - But sometimes harder to maintain
+
+### RPC - Remote Procedure Call
+
+
++ RabbitMQ can be used as a nice RPCwrapper - Any RPC implementation based on queues is fine
++ Single queue - Rqeuests and responses goes through single queue, both matched by correlationid property
+
+>Correlationid is one of 14 messages properties defined in AMQP 0-9-1 protocol (like deliveryMode, replyTo, contentType etc)
+
+
+General RPC good habits
+
++ Make a clear comment in the code that function call is local or remote
++ Keep up-to-date documentation about dependencies between components
++ Handl communication issues, i.e when RPC server is down 
++ Scale-out RPC service by combining RPCpattern with Work Queues or more sophisticated exchanges like consistent hash 
++ and so on
+
+
+
+TODO
 
 
 
