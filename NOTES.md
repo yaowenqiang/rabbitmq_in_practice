@@ -368,6 +368,15 @@ General RPC good habits
 
 TODO
 
+### Custom exchanges - consistent hash
+
+Sample usecases
+
++ Split long queue into smaller ones
++ Distribute logically related messages across many queues to reduce latency from teh consumer's perspective and increase reliability
+
+> rabbitmq-plugins enable rabbitmq_consistent_hash_exchange
+
 
 
 
