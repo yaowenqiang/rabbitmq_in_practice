@@ -378,6 +378,68 @@ Sample usecases
 > rabbitmq-plugins enable rabbitmq_consistent_hash_exchange
 
 
+### Dead Letter Exchange(DLX)
+
+Messages from the queue can be dead-lettered when
+
++ Message is negatively (ask)nowledged - When Nack or Reject with requeue-false is called
++ TTL expired - When message expires due to per-message TTL
++ Message is dropped - Queue exceeded length limit
+
++ Manage rejected messages - When Nack or Rejected with requeue-false is called
++ Manage queue capacity - When messages expires due to per-message TTL, or queue size exceeded length limit
++ Delay publication - intentional latency increase between publisher and consumer
+
+
+### Delay retry / delay schedule with DLS
+
+When  to use
+
++ No need or forbidden to consume messages immediately
+  + Publish messages, but allow consumers to consume them after 3:00 PM Friday after conference pass
++ Automatic retrying
+  + Rejected message to be resend again in about 10 minutes
++ Delay and 'batch' publication
+  + intentional latency increase between publisher and consumer or group messages into bigger batches
+  + Consider simple solutions over installing additional plugins, like rabbitmq-delayed-message-exchange Such plugins store messages in mnesia table, which is not designed to store high volume of the data
+
+
+## Transactions and Publisher Confirms
+
+### Data safety
+
+Acknowledgments on both consumer and publisher side are important for data safety
+
+
++ Consumer Acknowledgment
+  + One of ACK, nACK (RabbitMQ extension for Reject to reject multiple messages at once), Reject(defined in AMQP protocol)
+  + defaults Auto Ack
++ Ack - Positive acknowledgment -> remove message from the queue
++ nACK or Reject - Negative acknowledgment with requeue=true -> keep message in the queue
++ nACK or Reject - Negative acknowledgment with requeue=false -> remove message from the queue
++ Transaction(tx)
+  + Safe batching feature (remember batching Acks)
+  + defaults Disabled
++ Publisher Confirms
+  + Broker to send confirmation once message is safety stored (RabbitMQ feature)
+  + Deafults disabled
+
+
+  > Transactions decrease performance. Overall throughput is decreased by factor close to 250 Consider 'publisher confirms' or smart acknowledgments implementation
+
+## RabbitMQ Vhosts
+
+Virtual hosts are logical groups of entities
+vhosts support multi-tenant Architecture.Vhosts can be an application name (app1, app2), environment(development, pipe, production)and so on
+Default vhost is /(here why we use %2f in REST api requests)
+
+Separate service, separate resources
+Same service, separate resources
+
+
+
+
+
 
 
 
