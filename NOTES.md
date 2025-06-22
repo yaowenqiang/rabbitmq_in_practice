@@ -437,7 +437,47 @@ Separate service, separate resources
 Same service, separate resources
 
 
+VHosts introduce an additional level of logical isolation
 
++ Monitoring is better
+  + Connections, channels, exchanges, queues are created inside particular vhost
++ Security - Logically isolated playgrounds 
+  + Resources can 'talk each other' only when they exist in the same virtual host. Simplifies user's permissions
++ Security - Limits 
+  + Apply limits of open connections, queues etc differently fro each vhost
++ Administration 
+  + One cluster for bigger audience instead of many smaller oneso
+
+
+Isolation is only a function split1
+When exchange or queue in oen Vhost causes performance issues, other vhosts are impacted as well
+
+## Policies
+
+What policies are?
+
++ Optional arguments for groups of queues, exchanges or Plugins
+  + Flexibility of updating queue or exchange parameters
+
+Why to use policies?
+
++ Dynamically change optional arguments for groups of queues, exchanges or plugins 
+  + Without policies, you must delete and create every resource again to change its properties
++ Vhost scoped
+  + Different set of policies for each virtual host
++ Protocol specific settings
+  + Plugins extend list of protocols and features are extensible
+
+### Lazy queus
+
++ Queues always keep part of messages in memory
+  + RabbitMQ deliver messages to consumers as fast as possible
++ Queue is an erlang process
+  + has its own heap (security &reliability)
++ Body is stored separately in a separate memory
+  + Body of the message is stored in 'Binaries'
++ Service booting
+  + When RabbitMQ starts up to 16384 messages smaller than 4k are loaded into memory
 
 
 
