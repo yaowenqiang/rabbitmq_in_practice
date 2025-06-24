@@ -1,0 +1,126 @@
+# docker-compose.yml
+
+services:
+  rabbit1:
+    image: rabbitmq:3.13-management
+    container_name: rabbit1
+    hostname: rabbit1
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SECURE_UNIQUE_COOKIE
+      - RABBITMQ_NODENAME=rabbit@rabbit1
+    volumes:
+      - rabbit1-data:/var/lib/rabbitmq
+    networks:
+      rabbitnet:
+        ipv4_address: 10.20.0.2
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  rabbit2:
+    image: rabbitmq:3.13-management
+    container_name: rabbit2
+    hostname: rabbit2
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SECURE_UNIQUE_COOKIE
+      - RABBITMQ_NODENAME=rabbit@rabbit2
+    volumes:
+      - rabbit2-data:/var/lib/rabbitmq
+    networks:
+      rabbitnet:
+        ipv4_address: 10.20.0.3
+    depends_on:
+      rabbit1:
+        condition: service_healthy
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+
+  rabbit3:
+    image: rabbitmq:3.13-management
+    container_name: rabbit3
+    hostname: rabbit3
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SECURE_UNIQUE_COOKIE
+      - RABBITMQ_NODENAME=rabbit@rabbit3
+    volumes:
+      - rabbit3-data:/var/lib/rabbitmq
+    networks:
+      rabbitnet:
+        ipv4_address: 10.20.0.4
+    depends_on:
+      rabbit1:
+        condition: service_healthy
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+
+  cluster-setup:
+    image: rabbitmq:3.13-management
+    container_name: cluster_setup
+    depends_on:
+      rabbit1:
+        condition: service_healthy
+      rabbit2:
+        condition: service_healthy
+      rabbit3:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SECURE_UNIQUE_COOKIE
+    command: >
+      bash -c "
+      echo '===== 确保所有节点完全启动 =====';
+      sleep 20;
+      
+      echo '===== 重置所有节点状态 =====';
+      # 强制重置所有节点 (清理任何旧状态)
+      rabbitmqctl -n rabbit@rabbit1 force_reset;
+      rabbitmqctl -n rabbit@rabbit2 force_reset;
+      rabbitmqctl -n rabbit@rabbit3 force_reset;
+      sleep 5;
+      
+      echo '===== 重建集群 =====';
+      # 重新启动主节点
+      rabbitmqctl -n rabbit@rabbit1 start_app;
+      
+      # 添加节点2
+      rabbitmqctl -n rabbit@rabbit2 stop_app;
+      rabbitmqctl -n rabbit@rabbit2 reset;
+      rabbitmqctl -n rabbit@rabbit2 join_cluster rabbit@rabbit1;
+      rabbitmqctl -n rabbit@rabbit2 start_app;
+      
+      # 添加节点3
+      rabbitmqctl -n rabbit@rabbit3 stop_app;
+      rabbitmqctl -n rabbit@rabbit3 reset;
+      rabbitmqctl -n rabbit@rabbit3 join_cluster rabbit@rabbit1;
+      rabbitmqctl -n rabbit@rabbit3 start_app;
+      
+      echo '===== 设置HA策略 =====';
+      rabbitmqctl -n rabbit@rabbit1 set_policy ha-all \".\" '{\"ha-mode\":\"all\"}';
+      
+      echo '===== 集群状态验证 =====';
+      rabbitmqctl -n rabbit@rabbit1 cluster_status;
+      
+      echo '===== 集群配置完成 ====='
+      "
+    volumes:
+      - rabbit1-data:/var/lib/rabbitmq # 共享cookie和状态
+      - rabbit2-data:/var/lib/rabbitmq
+      - rabbit3-data:/var/lib/rabbitmq
+    networks:
+      rabbitnet:
+
+volumes:
+  rabbit1-data:
+  rabbit2-data:
+  rabbit3-data:
+
+networks:
+  rabbitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.20.0.0/24
